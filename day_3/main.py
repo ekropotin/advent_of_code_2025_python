@@ -1,24 +1,28 @@
 import fileinput
 
 
+def calc_max_number(s: str):
+    sum = 0
+    pos = 0
+    digits_left = 12
+    while digits_left > 0:
+        local_max = 0
+        for i in range(pos, len(s) - digits_left + 1):
+            d = int(s[i])
+            if d > local_max:
+                local_max = d
+                pos = i + 1
+        sum += 10 ** (digits_left - 1) * local_max
+        digits_left -= 1
+    return sum
+
+
 def main():
     with fileinput.input() as f:
         res = 0
         for line in f:
             print(f"processing {line}")
-            max_1, max_2 = -1, -1
-            max_1_pos = -1
-            for i in range(0, len(line) - 2):
-                num = int(line[i])
-                if num > max_1:
-                    max_1 = num
-                    max_1_pos = i
-            for i in range(max_1_pos + 1, len(line) - 1):
-                num = int(line[i])
-                max_2 = max(num, max_2)
-            res += 10 * max_1 + max_2
-            print(f"biggest number: {10 * max_1 + max_2}")
-
+            res += calc_max_number(line[:-1])  # strip \n from the line
     print(res)
 
 
