@@ -9,11 +9,19 @@ def create_matrix():
     return res
 
 
-def main():
-    matrix = create_matrix()
+def remove_rolls(matrix: list[list]):
     res = 0
     rows, cols = len(matrix), len(matrix[0])
-    directions = [(1, 0), (0, 1), (-1, 0), (0, -1), (1, 1), (-1, -1), (1, -1), (-1, 1)]
+    directions = [
+        (1, 0),
+        (0, 1),
+        (-1, 0),
+        (0, -1),
+        (1, 1),
+        (-1, -1),
+        (1, -1),
+        (-1, 1),
+    ]
     for r in range(0, rows):
         for c in range(0, cols):
             if matrix[r][c] != "@":
@@ -29,7 +37,18 @@ def main():
                 ):
                     adj_count += 1
             if adj_count < 4:
+                matrix[r][c] = "."
                 res += 1
+    return res
+
+
+def main():
+    matrix = create_matrix()
+    res = 0
+    tmp = remove_rolls(matrix)
+    while tmp > 0:
+        res += tmp
+        tmp = remove_rolls(matrix)
     print(res)
 
 
