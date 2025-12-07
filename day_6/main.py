@@ -20,16 +20,19 @@ def main():
             padded_count = 0
             print(f"processing {nums} with {op}")
             while padded_count < cols_len:
+                tmp = ""
                 for num_str in nums:
                     if curr_pos >= len(num_str):
                         padded_count += 1
                         continue
-                    digit = int(num_str[curr_pos])
-                    print(f"digit {digit} at pos {curr_pos}")
-                    if op == "+":
-                        tmp_res += digit
-                    else:
-                        tmp_res *= digit
+                    tmp += num_str[-1 - curr_pos]
+
+                digit = int(tmp)
+                print(f"digit {digit} at pos {curr_pos}")
+                if op == "+":
+                    tmp_res += digit
+                else:
+                    tmp_res *= digit
 
                 # print(f"padded: {padded_count}")
                 if padded_count >= cols_len:
