@@ -1,46 +1,41 @@
-from collections import defaultdict
+import math
 
 
 def main():
-    with open("test.txt") as f:
-        lines = f.readlines()
-        operators = lines[-1].split()
-        cols = defaultdict(list)
-        for line in lines[:-1]:
-            for i, num in enumerate(line.split()):
-                cols[i].append(num)
+    lines = []
+    max_line_len = 0
+    res = 0
 
-        res = 0
-        cols_len = len(cols[0])
-        print(f"cols: {cols_len}")
-        for i, nums in cols.items():
-            op = operators[i]
-            tmp_res = 1 if op == "*" else 0
-            curr_pos = 0
-            padded_count = 0
-            print(f"processing {nums} with {op}")
-            while padded_count < cols_len:
-                tmp = ""
-                for num_str in nums:
-                    if curr_pos >= len(num_str):
-                        padded_count += 1
-                        continue
-                    tmp += num_str[-1 - curr_pos]
+    with open("input.txt") as f:
+        for line in f:
+            lines.append(line[:-1])
+            max_line_len = max(max_line_len, len(line) - 1)
 
-                digit = int(tmp)
-                print(f"digit {digit} at pos {curr_pos}")
-                if op == "+":
-                    tmp_res += digit
-                else:
-                    tmp_res *= digit
+    col_idx = max_line_len - 1
+    batch = []
+    while col_idx >= 0:
+        tmp_num = ""
+        for line_idx, line in enumerate(lines):
+            if line_idx == len(lines) - 1:
+                # Last line
+                batch.append(tmp_num)
+                if col_idx < len(line) and line[col_idx] in set(["+", "*"]):
+                    # we landed of + or *
+                    # Perform calculation and move to the next batch
+                    if line[col_idx] == "+":
+                        res += sum([int(num) for num in batch])
+                    else:
+                        res += math.prod([int(num) for num in batch])
+                    batch = []
+                    # skip delim between batches
+                    col_idx -= 1
+            else:
+                if col_idx < len(line) and line[col_idx]:
+                    tmp_num += line[col_idx]
 
-                # print(f"padded: {padded_count}")
-                if padded_count >= cols_len:
-                    break
-                padded_count = 0
-                curr_pos += 1
-            res += tmp_res
-        print(res)
+        col_idx -= 1
+
+    print(res)
 
 
 if __name__ == "__main__":
