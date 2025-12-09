@@ -21,18 +21,12 @@ def main():
             dist = (x1 - x2) ** 2 + (y1 - y2) ** 2 + (z1 - z2) ** 2
             heapq.heappush(heap, (dist, i, j))
 
-    MAX_CONNECTIONS = 1000
-    for i in range(0, MAX_CONNECTIONS):
+    while True:
         _, box1, box2 = heapq.heappop(heap)
         disjoint_set.merge(box1, box2)
-
-    # print(disjoint_set.subsets())
-    lens = [len(subset) for subset in disjoint_set.subsets()]
-    lens.sort(reverse=True)
-    res = 1
-    for i in range(0, min(3, len(lens))):
-        res *= lens[i]
-    print(res)
+        if disjoint_set.subset_size(box1) == BOX_COUNT:
+            print(coordinates[box1][0] * coordinates[box2][0])
+            break
 
 
 if __name__ == "__main__":
